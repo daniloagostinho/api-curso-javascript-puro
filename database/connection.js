@@ -5,14 +5,8 @@ const dbPassword = process.env.DB_PASS;
 
 
 const connect = () => {
-    mongoose.connect(`mongodb+srv://${dbUser}:${dbPassword}@cluster0.0xkawak.mongodb.net/test?retryWrites=true&w=majority`, {
-    server: {
-      socketOptions: {
-        socketTimeoutMS: 0,
-        connectTimeoutMS: 10000
-      }
-    }
-  });
+    mongoose.connect(`mongodb+srv://${dbUser}:${dbPassword}@cluster0.0xkawak.mongodb.net/test?retryWrites=true&w=majority`)
+
     const connection = mongoose.connection;
 
     connection.on("error", () => {
