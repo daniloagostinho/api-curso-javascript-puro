@@ -1,4 +1,5 @@
 const User = require("../models/User");
+const UploadImage = require("../models/UploadImage");
 
 const bcrypt = require("bcrypt");
 
@@ -66,6 +67,30 @@ module.exports = class AuthRegisterUserController {
         .status(500)
         .json({
           message: "Ocorreu um erro ao cadastrar o usuário, tente mais tarde!",
+        });
+    }
+  }
+  static async uploadImage(req, res) {
+    let image = "";
+
+    if (req.file) {
+      image = req.file.filename;
+    }
+
+    const uploadImage = new UploadImage({
+      image
+    });
+
+    try {
+      await uploadImage.save();
+      res
+        .status(201)
+        .json({ message: "Upload realizado com sucesso!" });
+    } catch (error) {
+      res
+        .status(500)
+        .json({
+          message: "Ocorreu um erro ao fazer upload da imagem, tente mais tarde!",
         });
     }
   }
