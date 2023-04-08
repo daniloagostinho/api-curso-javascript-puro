@@ -2,12 +2,12 @@ const Revenues = require("../models/Revenues");
 
 module.exports = class RevenuesController {
   static async registerRevenues(req, res) {
-    const { typeRevenue, value, dateEntry } = req.body.user.month.listMonth;
+    const { category, value, dateEntry } = req.body.user.month.listMonth;
 
     const title = req.body.user.month.title;
     const user = req.body.user.title;
 
-    if (!typeRevenue) {
+    if (!category) {
       return res
         .status(422)
         .json({ message: "O tipo de receita é obrigatório!" });
@@ -29,7 +29,7 @@ module.exports = class RevenuesController {
         month: {
           title,
           listMonth: {
-            typeRevenue,
+            category,
             value,
             dateEntry,
           },
@@ -61,7 +61,7 @@ module.exports = class RevenuesController {
               title: el.user.month.title,
               listMonth: {
                 _id: el._id.toString(),
-                typeRevenue: el.user.month.listMonth.typeRevenue,
+                category: el.user.month.listMonth.category,
                 value: el.user.month.listMonth.value,
                 dateEntry: el.user.month.listMonth.dateEntry,
                 actions: [

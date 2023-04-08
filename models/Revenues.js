@@ -6,7 +6,7 @@ const Revenues = mongoose.model("Revenues", {
     month: {
       title: String,
       listMonth: {
-        typeRevenue: String,
+        category: String,
         value: String,
         dateEntry: String,
       },
