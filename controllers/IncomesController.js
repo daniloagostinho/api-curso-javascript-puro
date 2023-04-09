@@ -2,12 +2,12 @@ const Incomes = require("../models/Incomes");
 
 module.exports = class IncomesController {
   static async registerIncomes(req, res) {
-    const { category, value, dateEntry } = req.body.user.month.listMonth;
+    const { income, value, dateEntry } = req.body.user.month.listMonth;
 
     const title = req.body.user.month.title;
     const user = req.body.user.title;
 
-    if (!category) {
+    if (!income) {
       return res
         .status(422)
         .json({ message: "O tipo de receita é obrigatório!" });
@@ -29,7 +29,7 @@ module.exports = class IncomesController {
         month: {
           title,
           listMonth: {
-            category,
+            income,
             value,
             dateEntry,
           },
@@ -61,7 +61,7 @@ module.exports = class IncomesController {
               title: el.user.month.title,
               listMonth: {
                 _id: el._id.toString(),
-                category: el.user.month.listMonth.category,
+                income: el.user.month.listMonth.income,
                 value: el.user.month.listMonth.value,
                 dateEntry: el.user.month.listMonth.dateEntry,
                 actions: [
@@ -76,10 +76,10 @@ module.exports = class IncomesController {
 
       const result = showMonth
         ? newArray.filter(
-            (item) =>
-              user.includes(item.user.title) &&
-              item.user.month.title.includes(month)
-          )
+          (item) =>
+            user.includes(item.user.title) &&
+            item.user.month.title.includes(month)
+        )
         : list;
 
       res.status(200).json({ result });
@@ -110,6 +110,44 @@ module.exports = class IncomesController {
       }
     } catch (error) {
       res.status(500).json({ message: "Erro ao excluir a receita!" });
+    }
+  }
+
+  static async getIncomeStatement(req, res) {
+    try {
+      const incomes = await Incomes.find({});
+
+      const incomeStatement = incomes.reduce((acc, income) => {
+        const dateEntry = new Date(income.user.month.listMonth.dateEntry);
+        const month = dateEntry.toLocaleDateString('default', { month: 'long' });
+        const year = dateEntry.getFullYear();
+
+        const monthYear = `${month} ${year}`;
+
+        if (!acc[monthYear]) {
+          acc[monthYear] = {
+            month: monthYear,
+            total: 0,
+            details: [],
+          };
+        }
+
+        const value = parseFloat(income.user.month.listMonth.value);
+
+        acc[monthYear].total += value;
+        acc[monthYear].details.push({
+          income: income.user.month.listMonth.income,
+          value,
+        });
+
+        return acc;
+      }, {});
+
+      const result = Object.values(incomeStatement);
+
+      res.status(200).json({ result });
+    } catch (error) {
+      res.status(500).json({ message: "Erro ao obter o extrato de receitas!" });
     }
   }
 };

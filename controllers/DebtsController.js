@@ -68,7 +68,7 @@ module.exports = class DebtsController {
               title: el.user.month.title,
               listMonth: {
                 _id: el._id.toString(),
-                debt: el.user.month.listMonth.debt,
+                debt: el.user.month.listMonth.debt, 
                 category: el.user.month.listMonth.category,
                 value: el.user.month.listMonth.value,
                 expirationDate: el.user.month.listMonth.expirationDate,
