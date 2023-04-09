@@ -10,13 +10,13 @@ app.use(cors())
 
 const AuthRegisterUserRoutes = require("./routes/AuthRegisterUserRoutes") 
 const LoginRoutes = require("./routes/LoginRoutes")
-const RevenuesRoutes = require("./routes/RevenuesRoutes")
+const incomesRoutes = require("./routes/incomesRoutes")
 
 const DebtsRoutes = require("./routes/DebtsRoutes")
 
 app.use(AuthRegisterUserRoutes)
 app.use(LoginRoutes)
-app.use(RevenuesRoutes)
+app.use(incomesRoutes)
 app.use(DebtsRoutes)
 
 const port = process.env.PORT || 3000;
