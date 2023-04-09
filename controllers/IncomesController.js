@@ -1,7 +1,7 @@
-const Incomes = require("../models/incomes");
+const Incomes = require("../models/Incomes");
 
-module.exports = class incomesController {
-  static async registerincomes(req, res) {
+module.exports = class IncomesController {
+  static async registerIncomes(req, res) {
     const { category, value, dateEntry } = req.body.user.month.listMonth;
 
     const title = req.body.user.month.title;
@@ -47,7 +47,7 @@ module.exports = class incomesController {
     }
   }
 
-  static async listincomes(req, res) {
+  static async listIncomes(req, res) {
     Incomes.find({}).then((list) => {
       const { month } = req.headers;
       const showMonth = month ? month : "";
@@ -86,10 +86,10 @@ module.exports = class incomesController {
     });
   }
 
-  static async updateincomes(req, res) {
+  static async updateIncomes(req, res) {
     try {
       const id = req.params.id;
-      const user = await incomes.findByIdAndUpdate(id, req.body, {
+      const user = await Incomes.findByIdAndUpdate(id, req.body, {
         new: true,
       });
       res.status(200).json({ user });
@@ -101,9 +101,9 @@ module.exports = class incomesController {
   static async deleteIncome(req, res) {
     try {
       const id = req.params.id;
-      const deleteincomes = await Incomes.findByIdAndDelete(id);
+      const deleteIncomes = await Incomes.findByIdAndDelete(id);
 
-      if (deleteincomes) {
+      if (deleteIncomes) {
         res
           .status(200)
           .json({ messagem: "A receita foi excluída com sucesso!" });

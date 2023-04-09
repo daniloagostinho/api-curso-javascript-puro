@@ -2,9 +2,9 @@ const router = require("express").Router();
 
 const incomesController = require("../controllers/IncomesController")
 
-router.post("/auth/incomes", incomesController.registerincomes);
-router.get("/list/incomes", incomesController.listincomes);
-router.put("/update/incomes/:id", incomesController.updateincomes);
+router.post("/auth/incomes", incomesController.registerIncomes);
+router.get("/list/incomes", incomesController.listIncomes);
+router.put("/update/incomes/:id", incomesController.updateIncomes);
 router.delete("/delete/income/:id", incomesController.deleteIncome);
 
 module.exports = router;
