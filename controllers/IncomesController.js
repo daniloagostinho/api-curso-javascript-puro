@@ -138,6 +138,7 @@ module.exports = class IncomesController {
         acc[monthYear].details.push({
           income: income.user.month.listMonth.income,
           value,
+          dateEntry
         });
 
         return acc;

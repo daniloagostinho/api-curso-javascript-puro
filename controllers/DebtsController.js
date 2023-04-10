@@ -146,6 +146,7 @@ module.exports = class DebtsController {
         acc[monthYear].details.push({
           debt: debt.user.month.listMonth.debt,
           value,
+          expirationDate
         });
 
         return acc;
