@@ -120,4 +120,42 @@ module.exports = class DebtsController {
       res.status(500).json({ message: "Erro ao excluir a divída!" });
     }
   }
+
+  static async getDebtStatement(req, res) {
+    try {
+      const debts = await Debts.find({});
+
+      const debtStatement = debts.reduce((acc, debt) => {
+        const expirationDate = new Date(debt.user.month.listMonth.expirationDate);
+        const month = expirationDate.toLocaleDateString('default', { month: 'long' });
+        const year = expirationDate.getFullYear();
+
+        const monthYear = `${month} ${year}`;
+
+        if (!acc[monthYear]) {
+          acc[monthYear] = {
+            month: monthYear,
+            total: 0,
+            details: [],
+          };
+        }
+
+        const value = parseFloat(debt.user.month.listMonth.value);
+
+        acc[monthYear].total += value;
+        acc[monthYear].details.push({
+          debt: debt.user.month.listMonth.debt,
+          value,
+        });
+
+        return acc;
+      }, {});
+
+      const result = Object.values(debtStatement);
+
+      res.status(200).json({ result });
+    } catch (error) {
+      res.status(500).json({ message: "Erro ao obter o extrato de dívidas!" });
+    }
+  }
 };
