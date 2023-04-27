@@ -123,7 +123,9 @@ module.exports = class DebtsController {
 
   static async getDebtStatement(req, res) {
     try {
-      const debts = await Debts.find({});
+      const { user } = req.headers;
+  
+      const debts = await Debts.find({ "user.title": user });
 
       const debtStatement = debts.reduce((acc, debt) => {
         const expirationDate = new Date(debt.user.month.listMonth.expirationDate);
