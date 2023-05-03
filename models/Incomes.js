@@ -8,7 +8,7 @@ const incomes = mongoose.model("Incomes", {
       listMonth: {
         income: String,
         value: String,
-        dateEntry: String,
+        dueDate: String,
       },
     },
   },
