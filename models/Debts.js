@@ -10,7 +10,7 @@ const Debts = mongoose.model("Debts", {
         debt: String,
         category: String,
         value: String,
-        expirationDate: String,
+        dueDate: String,
       },
     },
   },
