@@ -6,7 +6,7 @@ module.exports = class DebtsController {
     const user = req.body.user.title;
     const date = req.body.user.date;
 
-    const { debt, category, value, expirationDate } =
+    const { debt, category, value, dueDate } =
       req.body.user.month.listMonth;
 
     if (!debt) {
@@ -21,7 +21,7 @@ module.exports = class DebtsController {
       return res.status(422).json({ message: "O valor é obrigatório!" });
     }
 
-    if (!expirationDate) {
+    if (!dueDate) {
       return res
         .status(422)
         .json({ message: "A data de expiração é obrigatório!" });
@@ -37,7 +37,7 @@ module.exports = class DebtsController {
             debt,
             category,
             value,
-            expirationDate,
+            dueDate
           },
         },
       },
@@ -71,7 +71,7 @@ module.exports = class DebtsController {
                 debt: el.user.month.listMonth.debt, 
                 category: el.user.month.listMonth.category,
                 value: el.user.month.listMonth.value,
-                expirationDate: el.user.month.listMonth.expirationDate,
+                dueDate: el.user.month.listMonth.dueDate,
                 actions: [
                   "https://raw.githubusercontent.com/daniloagostinho/curso-angular15-na-pratica/main/src/assets/images/edit.png",
                   "https://raw.githubusercontent.com/daniloagostinho/curso-angular15-na-pratica/main/src/assets/images/delete.png",
@@ -89,6 +89,7 @@ module.exports = class DebtsController {
               item.user.month.title.includes(month)
           )
         : list;
+
 
       res.status(200).json({ result });
     });
@@ -128,9 +129,9 @@ module.exports = class DebtsController {
       const debts = await Debts.find({ "user.title": user });
 
       const debtStatement = debts.reduce((acc, debt) => {
-        const expirationDate = new Date(debt.user.month.listMonth.expirationDate);
-        const month = expirationDate.toLocaleDateString('default', { month: 'long' });
-        const year = expirationDate.getFullYear();
+        const dueDate = new Date(debt.user.month.listMonth.dueDate);
+        const month = dueDate.toLocaleDateString('default', { month: 'long' });
+        const year = dueDate.getFullYear();
 
         const monthYear = `${month} ${year}`;
 
@@ -148,7 +149,7 @@ module.exports = class DebtsController {
         acc[monthYear].details.push({
           debt: debt.user.month.listMonth.debt,
           value,
-          expirationDate
+          dueDate
         });
 
         return acc;

@@ -9,6 +9,7 @@ const incomes = mongoose.model("Incomes", {
         income: String,
         value: String,
         dueDate: String,
+        paymentMethod: String,
       },
     },
   },

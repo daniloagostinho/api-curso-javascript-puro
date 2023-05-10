@@ -2,7 +2,7 @@ const Incomes = require("../models/Incomes");
 
 module.exports = class IncomesController {
   static async registerIncomes(req, res) {
-    const { income, value, dateEntry } = req.body.user.month.listMonth;
+    const { income, value, dueDate, paymentMethod } = req.body.user.month.listMonth;
 
     const title = req.body.user.month.title;
     const user = req.body.user.title;
@@ -17,11 +17,18 @@ module.exports = class IncomesController {
       return res.status(422).json({ message: "O valor obrigatório!" });
     }
 
-    if (!dateEntry) {
+    if (!dueDate) {
       return res
         .status(422)
         .json({ message: "A data de entrada é obrigatório!" });
     }
+
+    if (!paymentMethod) {
+      return res
+        .status(422)
+        .json({ message: "O método de pagamento é obrigatório!" });
+    }
+
 
     const incomes = new Incomes({
       user: {
@@ -31,7 +38,8 @@ module.exports = class IncomesController {
           listMonth: {
             income,
             value,
-            dateEntry,
+            dueDate,
+            paymentMethod
           },
         },
       },
@@ -63,7 +71,8 @@ module.exports = class IncomesController {
                 _id: el._id.toString(),
                 income: el.user.month.listMonth.income,
                 value: el.user.month.listMonth.value,
-                dateEntry: el.user.month.listMonth.dateEntry,
+                dueDate: el.user.month.listMonth.dueDate,
+                paymentMethod: el.user.month.listMonth.paymentMethod,
                 actions: [
                   "https://raw.githubusercontent.com/daniloagostinho/curso-angular15-na-pratica/main/src/assets/images/edit.png",
                   "https://raw.githubusercontent.com/daniloagostinho/curso-angular15-na-pratica/main/src/assets/images/delete.png",
@@ -120,9 +129,9 @@ module.exports = class IncomesController {
       const incomes = await Incomes.find({ "user.title": user });
   
       const incomeStatement = incomes.reduce((acc, income) => {
-        const dateEntry = new Date(income.user.month.listMonth.dateEntry);
-        const month = dateEntry.toLocaleDateString('default', { month: 'long' });
-        const year = dateEntry.getFullYear();
+        const dueDate = new Date(income.user.month.listMonth.dueDate);
+        const month = dueDate.toLocaleDateString('default', { month: 'long' });
+        const year = dueDate.getFullYear();
   
         const monthYear = `${month} ${year}`;
   
@@ -140,7 +149,7 @@ module.exports = class IncomesController {
         acc[monthYear].details.push({
           income: income.user.month.listMonth.income,
           value,
-          dateEntry
+          dueDate
         });
   
         return acc;
