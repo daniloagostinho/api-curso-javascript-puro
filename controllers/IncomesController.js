@@ -6,6 +6,7 @@ module.exports = class IncomesController {
 
     const title = req.body.user.month.title;
     const user = req.body.user.title;
+    const year = req.body.user.month.year;
 
     if (!income) {
       return res
@@ -35,6 +36,7 @@ module.exports = class IncomesController {
         title: user,
         month: {
           title,
+          year,
           listMonth: {
             income,
             value,
@@ -56,17 +58,19 @@ module.exports = class IncomesController {
   }
 
   static async listIncomes(req, res) {
-    Incomes.find({}).then((list) => {
-      const { month } = req.headers;
-      const showMonth = month ? month : "";
-      const { user } = req.headers;
+    const { month, year } = req.headers;
 
-      const newArray = list.map((el) => {
+    console.log(month, year)
+    const user = req.headers.user;
+    try {
+      let list = await Incomes.find({ "user.month.year": year, "user.month.title": month, "user.title": user });
+      const result = list.map((el) => {
         return {
           user: {
             title: el.user.title,
             month: {
               title: el.user.month.title,
+              year: el.user.month.year,
               listMonth: {
                 _id: el._id.toString(),
                 income: el.user.month.listMonth.income,
@@ -74,26 +78,22 @@ module.exports = class IncomesController {
                 dueDate: el.user.month.listMonth.dueDate,
                 paymentMethod: el.user.month.listMonth.paymentMethod,
                 actions: [
-                  "https://raw.githubusercontent.com/daniloagostinho/curso-angular15-na-pratica/main/src/assets/images/edit.png",
-                  "https://raw.githubusercontent.com/daniloagostinho/curso-angular15-na-pratica/main/src/assets/images/delete.png",
+                  "https://raw.githubusercontent.com/daniloagostinho/curso-javascript/main/src/assets/images/edit.png",
+                  "https://raw.githubusercontent.com/daniloagostinho/curso-javascript/main/src/assets/images/delete.png"
                 ],
               },
             },
           },
         };
       });
-
-      const result = showMonth
-        ? newArray.filter(
-          (item) =>
-            user.includes(item.user.title) &&
-            item.user.month.title.includes(month)
-        )
-        : list;
-
+  
       res.status(200).json({ result });
-    });
+    } catch (error) {
+      res.status(500).json({ message: "Erro ao listar as receitas!" });
+    }
   }
+  
+
 
   static async updateIncomes(req, res) {
     try {

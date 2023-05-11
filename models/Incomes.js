@@ -5,6 +5,7 @@ const incomes = mongoose.model("Incomes", {
     title: String,
     month: {
       title: String,
+      year: Number,
       listMonth: {
         income: String,
         value: String,

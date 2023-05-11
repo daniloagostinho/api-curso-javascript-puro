@@ -9,7 +9,7 @@ module.exports = class AuthRegisterUserController {
   }
 
   static async registerUser(req, res) {
-    const { name, email, age, password, confirmPassword } = req.body;
+    const { name, email, gender, password, confirmPassword } = req.body;
 
     let image = "";
 
@@ -25,8 +25,8 @@ module.exports = class AuthRegisterUserController {
       return res.status(422).json({ message: "O email é obrigatório!" });
     }
 
-    if (!age) {
-      return res.status(422).json({ message: "A idade é obrigatório!" });
+    if (!gender) {
+      return res.status(422).json({ message: "O gênero é obrigatório!" });
     }
 
     if (!password) {
@@ -52,7 +52,7 @@ module.exports = class AuthRegisterUserController {
     const user = new User({
       name,
       email,
-      age,
+      gender,
       image,
       password: passwordHash,
     });

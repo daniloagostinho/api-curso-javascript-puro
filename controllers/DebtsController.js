@@ -73,8 +73,8 @@ module.exports = class DebtsController {
                 value: el.user.month.listMonth.value,
                 dueDate: el.user.month.listMonth.dueDate,
                 actions: [
-                  "https://raw.githubusercontent.com/daniloagostinho/curso-angular15-na-pratica/main/src/assets/images/edit.png",
-                  "https://raw.githubusercontent.com/daniloagostinho/curso-angular15-na-pratica/main/src/assets/images/delete.png",
+                  "https://raw.githubusercontent.com/daniloagostinho/curso-javascript/main/src/assets/images/edit.png",
+                  "https://raw.githubusercontent.com/daniloagostinho/curso-javascript/main/src/assets/images/delete.png",
                 ],
               },
             },
