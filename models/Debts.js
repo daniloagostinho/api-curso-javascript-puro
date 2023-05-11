@@ -6,6 +6,7 @@ const Debts = mongoose.model("Debts", {
     date: String,
     month: {
       title: String,
+      year: String,
       listMonth: {
         debt: String,
         category: String,

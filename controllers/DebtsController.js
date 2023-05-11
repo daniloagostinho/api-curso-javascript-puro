@@ -5,6 +5,7 @@ module.exports = class DebtsController {
     const title = req.body.user.month.title;
     const user = req.body.user.title;
     const date = req.body.user.date;
+    const year = req.body.user.month.year
 
     const { debt, category, value, dueDate } =
       req.body.user.month.listMonth;
@@ -21,6 +22,12 @@ module.exports = class DebtsController {
       return res.status(422).json({ message: "O valor é obrigatório!" });
     }
 
+
+    if (!year) {
+      return res.status(422).json({ message: "O ano é obrigatório!" });
+    }
+
+
     if (!dueDate) {
       return res
         .status(422)
@@ -33,6 +40,7 @@ module.exports = class DebtsController {
         date,
         month: {
           title,
+          year,
           listMonth: {
             debt,
             category,
@@ -54,13 +62,12 @@ module.exports = class DebtsController {
   }
 
   static async listDebts(req, res) {
-    
-    Debts.find({}).then((list) => {
-      const { month } = req.headers;
-      const showMonth = month ? month : "";
-      const { user } = req.headers;
+    const { month, year } = req.headers;
 
-      const newArray = list.map((el) => {
+    const user = req.headers.user;
+    try {
+      let list = await Debts.find({ "user.month.year": year, "user.month.title": month, "user.title": user });
+      const result = list.map((el) => {
         return {
           user: {
             title: el.user.title,
@@ -68,7 +75,7 @@ module.exports = class DebtsController {
               title: el.user.month.title,
               listMonth: {
                 _id: el._id.toString(),
-                debt: el.user.month.listMonth.debt, 
+                debt: el.user.month.listMonth.debt,
                 category: el.user.month.listMonth.category,
                 value: el.user.month.listMonth.value,
                 dueDate: el.user.month.listMonth.dueDate,
@@ -82,18 +89,12 @@ module.exports = class DebtsController {
         };
       });
 
-      const result = showMonth
-        ? newArray.filter(
-            (item) =>
-              user.includes(item.user.title) &&
-              item.user.month.title.includes(month)
-          )
-        : list;
-
-
       res.status(200).json({ result });
-    });
+    } catch (error) {
+      res.status(500).json({ message: "Erro ao listar as dívidas!" });
+    }
   }
+
 
   static async updateDebts(req, res) {
     try {
@@ -125,7 +126,7 @@ module.exports = class DebtsController {
   static async getDebtStatement(req, res) {
     try {
       const { user } = req.headers;
-  
+
       const debts = await Debts.find({ "user.title": user });
 
       const debtStatement = debts.reduce((acc, debt) => {

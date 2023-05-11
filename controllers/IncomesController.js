@@ -60,7 +60,6 @@ module.exports = class IncomesController {
   static async listIncomes(req, res) {
     const { month, year } = req.headers;
 
-    console.log(month, year)
     const user = req.headers.user;
     try {
       let list = await Incomes.find({ "user.month.year": year, "user.month.title": month, "user.title": user });
@@ -93,7 +92,6 @@ module.exports = class IncomesController {
     }
   }
   
-
 
   static async updateIncomes(req, res) {
     try {
