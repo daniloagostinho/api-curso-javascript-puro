@@ -85,13 +85,13 @@ module.exports = class IncomesController {
           },
         };
       });
-  
+
       res.status(200).json({ result });
     } catch (error) {
       res.status(500).json({ message: "Erro ao listar as receitas!" });
     }
   }
-  
+
 
   static async updateIncomes(req, res) {
     try {
@@ -123,16 +123,16 @@ module.exports = class IncomesController {
   static async getIncomeStatement(req, res) {
     try {
       const { user } = req.headers;
-  
+
       const incomes = await Incomes.find({ "user.title": user });
-  
+
       const incomeStatement = incomes.reduce((acc, income) => {
         const dueDate = new Date(income.user.month.listMonth.dueDate);
         const month = dueDate.toLocaleDateString('default', { month: 'long' });
         const year = dueDate.getFullYear();
-  
+
         const monthYear = `${month} ${year}`;
-  
+
         if (!acc[monthYear]) {
           acc[monthYear] = {
             month: monthYear,
@@ -140,25 +140,25 @@ module.exports = class IncomesController {
             details: []
           };
         }
-  
+
         const value = parseFloat(income.user.month.listMonth.value);
-  
+
         acc[monthYear].total += value;
         acc[monthYear].details.push({
           income: income.user.month.listMonth.income,
           value,
           dueDate
         });
-  
+
         return acc;
       }, {});
-  
+
       const result = Object.values(incomeStatement);
-  
+
       res.status(200).json({ result });
     } catch (error) {
       res.status(500).json({ message: "Erro ao obter o extrato de receitas!" });
     }
   }
-  
+
 };
