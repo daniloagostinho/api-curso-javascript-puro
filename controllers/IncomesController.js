@@ -160,5 +160,4 @@ module.exports = class IncomesController {
       res.status(500).json({ message: "Erro ao obter o extrato de receitas!" });
     }
   }
-
 };
