@@ -1,4 +1,4 @@
-const expenses = require("../models/Expenses");
+const Expenses = require("../models/Expenses");
 
 module.exports = class expensesController {
   static async registerexpenses(req, res) {
@@ -34,7 +34,7 @@ module.exports = class expensesController {
         .json({ message: "A data de expiração é obrigatório!" });
     }
 
-    const expenses = new expenses({
+    const expenses = new Expenses({
       user: {
         title: user,
         date,
@@ -61,12 +61,12 @@ module.exports = class expensesController {
     }
   }
 
-  static async listexpenses(req, res) {
+  static async listExpenses(req, res) {
     const { month, year } = req.headers;
 
     const user = req.headers.user;
     try {
-      let list = await expenses.find({ "user.month.year": year, "user.month.title": month, "user.title": user });
+      let list = await Expenses.find({ "user.month.year": year, "user.month.title": month, "user.title": user });
       const result = list.map((el) => {
         return {
           user: {
@@ -96,7 +96,7 @@ module.exports = class expensesController {
   }
 
 
-  static async updateexpenses(req, res) {
+  static async updateExpenses(req, res) {
     try {
       const id = req.params.id;
       const user = await expenses.findByIdAndUpdate(id, req.body, {
@@ -108,12 +108,12 @@ module.exports = class expensesController {
     }
   }
 
-  static async deleteexpenses(req, res) {
+  static async deleteExpenses(req, res) {
     try {
       const id = req.params.id;
-      const deleteexpenses = await expenses.findByIdAndDelete(id);
+      const deleteExpenses = await expenses.findByIdAndDelete(id);
 
-      if (deleteexpenses) {
+      if (deleteExpenses) {
         res
           .status(200)
           .json({ messagem: "A dívida foi excluída com sucesso!" });
@@ -123,7 +123,7 @@ module.exports = class expensesController {
     }
   }
 
-  static async getexpenseStatement(req, res) {
+  static async getExpenseStatement(req, res) {
     try {
       const { user } = req.headers;
 
