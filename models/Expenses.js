@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const Debts = mongoose.model("Debts", {
+const expenses = mongoose.model("expenses", {
   user: {
     title: String,
     date: String,
@@ -8,7 +8,7 @@ const Debts = mongoose.model("Debts", {
       title: String,
       year: String,
       listMonth: {
-        debt: String,
+        expense: String,
         category: String,
         value: String,
         dueDate: String,
@@ -17,4 +17,4 @@ const Debts = mongoose.model("Debts", {
   },
 });
 
-module.exports = Debts;
+module.exports = expenses;

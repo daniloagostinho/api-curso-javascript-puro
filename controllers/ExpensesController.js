@@ -1,16 +1,16 @@
-const Debts = require("../models/Debts");
+const Expenses = require("../models/Expenses");
 
-module.exports = class DebtsController {
-  static async registerDebts(req, res) {
+module.exports = class expensesController {
+  static async registerexpenses(req, res) {
     const title = req.body.user.month.title;
     const user = req.body.user.title;
     const date = req.body.user.date;
     const year = req.body.user.month.year
 
-    const { debt, category, value, dueDate } =
+    const { expense, category, value, dueDate } =
       req.body.user.month.listMonth;
 
-    if (!debt) {
+    if (!expense) {
       return res.status(422).json({ message: "A dívida é obrigatório!" });
     }
 
@@ -34,7 +34,7 @@ module.exports = class DebtsController {
         .json({ message: "A data de expiração é obrigatório!" });
     }
 
-    const debts = new Debts({
+    const expenses = new Expenses({
       user: {
         title: user,
         date,
@@ -42,7 +42,7 @@ module.exports = class DebtsController {
           title,
           year,
           listMonth: {
-            debt,
+            expense,
             category,
             value,
             dueDate
@@ -52,7 +52,7 @@ module.exports = class DebtsController {
     });
 
     try {
-      await debts.save();
+      await expenses.save();
       res
         .status(201)
         .json({ message: "Cadastro de dívida realizado com sucesso!" });
@@ -61,12 +61,12 @@ module.exports = class DebtsController {
     }
   }
 
-  static async listDebts(req, res) {
+  static async listExpenses(req, res) {
     const { month, year } = req.headers;
 
     const user = req.headers.user;
     try {
-      let list = await Debts.find({ "user.month.year": year, "user.month.title": month, "user.title": user });
+      let list = await Expenses.find({ "user.month.year": year, "user.month.title": month, "user.title": user });
       const result = list.map((el) => {
         return {
           user: {
@@ -75,7 +75,7 @@ module.exports = class DebtsController {
               title: el.user.month.title,
               listMonth: {
                 _id: el._id.toString(),
-                debt: el.user.month.listMonth.debt,
+                expense: el.user.month.listMonth.expense,
                 category: el.user.month.listMonth.category,
                 value: el.user.month.listMonth.value,
                 dueDate: el.user.month.listMonth.dueDate,
@@ -96,10 +96,10 @@ module.exports = class DebtsController {
   }
 
 
-  static async updateDebts(req, res) {
+  static async updateExpenses(req, res) {
     try {
       const id = req.params.id;
-      const user = await Debts.findByIdAndUpdate(id, req.body, {
+      const user = await Expenses.findByIdAndUpdate(id, req.body, {
         new: true,
       });
       res.status(200).json({ user });
@@ -108,12 +108,12 @@ module.exports = class DebtsController {
     }
   }
 
-  static async deleteDebts(req, res) {
+  static async deleteExpenses(req, res) {
     try {
       const id = req.params.id;
-      const deleteDebts = await Debts.findByIdAndDelete(id);
+      const deleteExpenses = await expenses.findByIdAndDelete(id);
 
-      if (deleteDebts) {
+      if (deleteExpenses) {
         res
           .status(200)
           .json({ messagem: "A dívida foi excluída com sucesso!" });
@@ -123,14 +123,14 @@ module.exports = class DebtsController {
     }
   }
 
-  static async getDebtStatement(req, res) {
+  static async getExpenseStatement(req, res) {
     try {
       const { user } = req.headers;
 
-      const debts = await Debts.find({ "user.title": user });
+      const expenses = await Expenses.find({ "user.title": user });
 
-      const debtStatement = debts.reduce((acc, debt) => {
-        const dueDate = new Date(debt.user.month.listMonth.dueDate);
+      const expenseStatement = expenses.reduce((acc, expense) => {
+        const dueDate = new Date(expense.user.month.listMonth.dueDate);
         const month = dueDate.toLocaleDateString('default', { month: 'long' });
         const year = dueDate.getFullYear();
 
@@ -144,11 +144,11 @@ module.exports = class DebtsController {
           };
         }
 
-        const value = parseFloat(debt.user.month.listMonth.value);
+        const value = parseFloat(expense.user.month.listMonth.value);
 
         acc[monthYear].total += value;
         acc[monthYear].details.push({
-          debt: debt.user.month.listMonth.debt,
+          expense: expense.user.month.listMonth.expense,
           value,
           dueDate
         });
@@ -156,7 +156,7 @@ module.exports = class DebtsController {
         return acc;
       }, {});
 
-      const result = Object.values(debtStatement);
+      const result = Object.values(expenseStatement);
 
       res.status(200).json({ result });
     } catch (error) {

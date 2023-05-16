@@ -12,12 +12,12 @@ const AuthRegisterUserRoutes = require("./routes/AuthRegisterUserRoutes")
 const LoginRoutes = require("./routes/LoginRoutes")
 const incomesRoutes = require("./routes/incomesRoutes")
 
-const DebtsRoutes = require("./routes/DebtsRoutes")
+const expensesRoutes = require("./routes/ExpensesRoutes")
 
 app.use(AuthRegisterUserRoutes)
 app.use(LoginRoutes)
 app.use(incomesRoutes)
-app.use(DebtsRoutes)
+app.use(expensesRoutes)
 
 const port = process.env.PORT || 3000;
 
