@@ -99,7 +99,7 @@ module.exports = class expensesController {
   static async updateExpenses(req, res) {
     try {
       const id = req.params.id;
-      const user = await expenses.findByIdAndUpdate(id, req.body, {
+      const user = await Expenses.findByIdAndUpdate(id, req.body, {
         new: true,
       });
       res.status(200).json({ user });
@@ -127,7 +127,7 @@ module.exports = class expensesController {
     try {
       const { user } = req.headers;
 
-      const expenses = await expenses.find({ "user.title": user });
+      const expenses = await Expenses.find({ "user.title": user });
 
       const expenseStatement = expenses.reduce((acc, expense) => {
         const dueDate = new Date(expense.user.month.listMonth.dueDate);
