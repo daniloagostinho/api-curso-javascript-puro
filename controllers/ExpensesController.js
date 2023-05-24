@@ -111,7 +111,7 @@ module.exports = class expensesController {
   static async deleteExpenses(req, res) {
     try {
       const id = req.params.id;
-      const deleteExpenses = await expenses.findByIdAndDelete(id);
+      const deleteExpenses = await Expenses.findByIdAndDelete(id);
 
       if (deleteExpenses) {
         res
