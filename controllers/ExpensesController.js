@@ -1,7 +1,7 @@
 const Expenses = require("../models/Expenses");
 
 module.exports = class expensesController {
-  static async registerexpenses(req, res) {
+  static async registerExpenses(req, res) {
     const title = req.body.user.month.title;
     const user = req.body.user.title;
     const date = req.body.user.date;
@@ -119,7 +119,7 @@ module.exports = class expensesController {
           .json({ messagem: "A dívida foi excluída com sucesso!" });
       }
     } catch (error) {
-      res.status(500).json({ message: "Erro ao excluir a divída!" });
+      res.status(500).json({ message: "Erro ao excluir a despesa!" });
     }
   }
 
