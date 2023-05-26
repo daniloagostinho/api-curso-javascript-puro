@@ -23,7 +23,7 @@ module.exports = class LoginController {
     } catch (error) {
       console.error(error);
       res.send("error", error);
-      
+
     }
 
     if (!user) {
@@ -39,6 +39,9 @@ module.exports = class LoginController {
     try {
       const secret = process.env.SECRET;
       const token = jwt.sign({ id: user._id }, secret);
+      console.log('user id:', user._id);
+      console.log('secret:', process.env.SECRET);
+      console.log('token:', token);
       res.status(200).json({ message: "Autenticação realizada com sucesso!", token });
     } catch (error) {
       console.error(error);
