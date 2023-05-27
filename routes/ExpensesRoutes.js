@@ -6,6 +6,6 @@ router.post("/auth/expenses", expensesController.registerExpenses);
 router.get("/list/expenses", expensesController.listExpenses);
 router.put("/update/expenses/:id", expensesController.updateExpenses);
 router.delete("/delete/expense/:id", expensesController.deleteExpenses);
-router.get("/expenses/extrato", expensesController.getExpenseStatement);
+router.get("/expenses/extract", expensesController.getExpenseStatement);
 
 module.exports = router;
