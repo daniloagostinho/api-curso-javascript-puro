@@ -122,9 +122,22 @@ module.exports = class IncomesController {
 
   static async getIncomeStatement(req, res) {
     try {
-      const { user } = req.headers;
+      const { user, startdate, enddate } = req.headers;
+      // Inicializa o objeto de consulta com o campo do usuário
+      let query = { "user.title": user };
 
-      const incomes = await Incomes.find({ "user.title": user });
+      // Verifica se as datas de início e fim foram fornecidas antes de adicionar ao objeto de consulta
+      if (startdate && enddate) {
+        const start = new Date(new Date(startdate).setUTCHours(0, 0, 0, 0));
+        const end = new Date(new Date(enddate).setUTCHours(23, 59, 59, 999));
+
+        query["user.month.listMonth.dueDate"] = {
+          $gte: start.toISOString(),
+          $lte: end.toISOString()
+        };
+      }
+
+      const incomes = await Incomes.find(query);
 
       const incomeStatement = incomes.reduce((acc, income) => {
         const dueDate = new Date(income.user.month.listMonth.dueDate);
@@ -157,6 +170,7 @@ module.exports = class IncomesController {
 
       res.status(200).json({ result });
     } catch (error) {
+      console.log(error);
       res.status(500).json({ message: "Erro ao obter o extrato de receitas!" });
     }
   }
