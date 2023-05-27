@@ -125,9 +125,24 @@ module.exports = class expensesController {
 
   static async getExpenseStatement(req, res) {
     try {
-      const { user } = req.headers;
+      const { user, startdate, enddate } = req.headers;
+      // Inicializa o objeto de consulta com o campo do usuário
+      let query = { "user.title": user };
 
-      const expenses = await Expenses.find({ "user.title": user });
+      // Verifica se as datas de início e fim foram fornecidas antes de adicionar ao objeto de consulta
+      if (startdate && enddate) {
+        const start = new Date(new Date(startdate).setUTCHours(0, 0, 0, 0));
+        const end = new Date(new Date(enddate).setUTCHours(23, 59, 59, 999));
+        console.log('startdate -->> ', start)
+        console.log('enddate -->> ', end)
+
+        query["user.month.listMonth.dueDate"] = {
+          $gte: start.toISOString(),
+          $lte: end.toISOString()
+        };
+      }
+
+      const expenses = await Expenses.find(query);
 
       const expenseStatement = expenses.reduce((acc, expense) => {
         const dueDate = new Date(expense.user.month.listMonth.dueDate);
@@ -160,7 +175,7 @@ module.exports = class expensesController {
 
       res.status(200).json({ result });
     } catch (error) {
-      res.status(500).json({ message: "Erro ao obter o extrato de dívidas!" });
+      res.status(500).json({ message: "Erro ao obter o extrato de despesas!" });
     }
   }
 };
