@@ -55,7 +55,7 @@ module.exports = class expensesController {
       await expenses.save();
       res
         .status(201)
-        .json({ message: "Cadastro de dívida realizado com sucesso!" });
+        .json({ message: "Cadastro de despesa realizado com sucesso!" });
     } catch (error) {
       res.status(500).json({ message: "Erro ao cadastrar dívida!" });
     }
